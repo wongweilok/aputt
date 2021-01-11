@@ -1,10 +1,13 @@
 package main
 
 import (
-	"fmt"
+	//"fmt"
 	"encoding/json"
 	"net/http"
 	"io/ioutil"
+
+	"github.com/gdamore/tcell/v2"
+	"github.com/rivo/tview"
 )
 
 type Timetable []struct {
@@ -57,5 +60,28 @@ func main() {
 	// Remove redundant intake codes
 	intakes := removeDup(intakeListDup)
 
-	fmt.Println(intakes)
+	// Initialize UI widgets
+	app := tview.NewApplication()
+	intakeCodes := tview.NewTable().SetSelectable(true, false)
+	timetable := tview.NewTextView().SetBorder(true)
+	flex := tview.NewFlex()
+
+	// Display the intake codes that have timetable available
+	for row, i := range intakes {
+		tableCell := tview.NewTableCell(i).
+			SetTextColor(tcell.ColorWhite)
+
+		intakeCodes.SetCell(row, 0, tableCell)
+	}
+
+	intakeCodes.SetBorder(true)
+
+	// Layout widgets with Flexbox
+	flex.AddItem(intakeCodes, 0, 1, true).
+		AddItem(timetable, 0, 5, false)
+
+	// Run the application
+	if err := app.SetRoot(flex, true).SetFocus(flex).Run(); err != nil {
+		panic(err)
+	}
 }
