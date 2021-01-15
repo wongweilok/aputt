@@ -1,10 +1,11 @@
 package main
 
 import (
-	//"fmt"
+	"fmt"
 	"encoding/json"
 	"net/http"
 	"io/ioutil"
+	"text/tabwriter"
 
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
@@ -63,7 +64,7 @@ func main() {
 	// Initialize UI widgets
 	app := tview.NewApplication()
 	intakeCodes := tview.NewTable().SetSelectable(true, false)
-	timetable := tview.NewTextView().SetBorder(true)
+	timetable := tview.NewTextView()
 	flex := tview.NewFlex()
 
 	// Display the intake codes that have timetable available
@@ -74,7 +75,28 @@ func main() {
 		intakeCodes.SetCell(row, 0, tableCell)
 	}
 
+	w := new(tabwriter.Writer)
+	w.Init(timetable, 5, 0, 2, ' ', 0)
+
+	intakeCodes.SetSelectedFunc(func(row, column int) {
+		timetable.SetText(intakes[row] + "\n\n")
+		for i := range tb {
+			if intakes[row] == tb[i].Intake {
+				fmt.Fprintln(
+					w, tb[i].Day + "\t" +
+					tb[i].Date + "\t" +
+					tb[i].StartTime + "-" + tb[i].EndTime + "\t" +
+					tb[i].Room + "\t" +
+					tb[i].Module + "\t" +
+					tb[i].LectID,
+				)
+			}
+		}
+		w.Flush()
+	})
+
 	intakeCodes.SetBorder(true)
+	timetable.SetBorder(true)
 
 	// Layout widgets with Flexbox
 	flex.AddItem(intakeCodes, 0, 1, true).
