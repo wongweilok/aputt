@@ -66,6 +66,8 @@ func main() {
 	intakeCodes := tview.NewTable().SetSelectable(true, false)
 	timetable := tview.NewTextView()
 	flex := tview.NewFlex()
+	searchBox := tview.NewInputField().
+		SetLabel("Search: ")
 
 	// Display the intake codes that have timetable available
 	for row, i := range intakes {
@@ -78,6 +80,7 @@ func main() {
 	w := new(tabwriter.Writer)
 	w.Init(timetable, 5, 0, 2, ' ', 0)
 
+	// Display the timetable based on the selected intake code
 	intakeCodes.SetSelectedFunc(func(row, column int) {
 		timetable.SetText(intakes[row] + "\n\n")
 		for i := range tb {
@@ -99,8 +102,58 @@ func main() {
 	timetable.SetBorder(true)
 
 	// Layout widgets with Flexbox
-	flex.AddItem(intakeCodes, 0, 1, true).
-		AddItem(timetable, 0, 5, false)
+	flex.AddItem(tview.NewFlex().SetDirection(tview.FlexRow).
+			AddItem(searchBox, 0, 1, false).
+			AddItem(intakeCodes, 0, 15, true), 0, 1, true).
+		AddItem(tview.NewFlex().SetDirection(tview.FlexRow).
+			AddItem(nil, 0, 1, false).
+			AddItem(timetable, 0, 15, true), 0, 5, false)
+
+	// Switch focus with Tab key
+	intakeCodes.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		if event.Key() == tcell.KeyTab {
+			app.SetFocus(searchBox)
+		}
+		return event
+	})
+
+	searchBox.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		if event.Key() == tcell.KeyTab {
+			app.SetFocus(intakeCodes)
+		}
+		return event
+	})
+
+	// Very basic search function
+	searchBox.SetDoneFunc(func(key tcell.Key) {
+		found := false
+		for i := range tb {
+			if searchBox.GetText() == tb[i].Intake {
+				found = true
+
+				timetable.SetText(tb[i].Intake + "\n\n")
+				fmt.Fprintln(
+					w, tb[i].Day + "\t" +
+					tb[i].Date + "\t" +
+					tb[i].StartTime + "-" + tb[i].EndTime + "\t" +
+					tb[i].Room + "\t" +
+					tb[i].Module + "\t" +
+					tb[i].LectID,
+				)
+
+				for row, j := range intakes {
+					if tb[i].Intake == j {
+						intakeCodes.Select(row, 0)
+					}
+				}
+			}
+		}
+		w.Flush()
+
+		if !found {
+			timetable.SetText("No search result found.")
+		}
+	})
 
 	// Run the application
 	if err := app.SetRoot(flex, true).SetFocus(flex).Run(); err != nil {
