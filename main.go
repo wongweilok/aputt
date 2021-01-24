@@ -69,7 +69,8 @@ func main() {
 	timetable := tview.NewTextView()
 	flex := tview.NewFlex()
 	searchBox := tview.NewInputField().
-		SetLabel("Search: ")
+		SetLabel("Search: ").
+		SetFieldWidth(19)
 
 	// Display the intake codes that have timetable available
 	for row, i := range intakes {
@@ -105,11 +106,10 @@ func main() {
 
 	// Layout widgets with Flexbox
 	flex.AddItem(tview.NewFlex().SetDirection(tview.FlexRow).
-			AddItem(searchBox, 0, 1, false).
-			AddItem(intakeCodes, 0, 15, true), 0, 1, true).
-		AddItem(tview.NewFlex().SetDirection(tview.FlexRow).
-			AddItem(nil, 0, 1, false).
-			AddItem(timetable, 0, 15, true), 0, 5, false)
+		AddItem(searchBox, 1, 1, false).
+		AddItem(tview.NewFlex().SetDirection(tview.FlexColumn).
+			AddItem(intakeCodes, 0, 1, true).
+			AddItem(timetable, 0, 5, false), 0, 25, true), 0, 1, true)
 
 	// Switch focus with Tab key
 	intakeCodes.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
