@@ -3,12 +3,17 @@
 ## About
 
 A small terminal application written in GO that display Asia Pacific University timetable.
-Work in progress...
+
+Under construction....
 
 ## TODO List
 
-1. Improve search function.
-2. Display multiple weeks timetable seperately.
-3. Color output:
-   - Indicate current ongoing class
-   - Indicate incoming class
+1. Main features
+   - Improve search function.
+   - Display timetable for current week only.
+   - Color output
+     * Indicate current ongoing class
+     * Indicate incoming class
+
+2. Others
+   - Organize source code into multiple files.
