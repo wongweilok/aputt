@@ -4,111 +4,77 @@ package main
 
 import (
 	"fmt"
-	"text/tabwriter"
 
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
 
+type Window func() (string, tview.Primitive)
+
+var app = tview.NewApplication()
+
 func main() {
-	intakes := parse_to_array("https://s3-ap-southeast-1.amazonaws.com/open-ws/weektimetable")
-
-	// Initialize UI widgets
-	app := tview.NewApplication()
-	intakeCodes := tview.NewTable().SetSelectable(true, false)
-	timetable := tview.NewTextView()
-	flex := tview.NewFlex()
-	searchBox := tview.NewInputField().
-		SetLabel("Search: ").
-		SetFieldWidth(19)
-
-	// Display the intake codes that have timetable available
-	for row, i := range intakes {
-		tableCell := tview.NewTableCell(i).
-			SetTextColor(tcell.ColorWhite)
-
-		intakeCodes.SetCell(row, 0, tableCell)
+	windows := []Window{
+		Timetable,
+		Browse,
 	}
 
-	w := new(tabwriter.Writer)
-	w.Init(timetable, 5, 0, 2, ' ', 0)
+	// Initialize UI widgets
+	flex := tview.NewFlex()
+	pages := tview.NewPages()
+	info := tview.NewTextView().
+		SetDynamicColors(true).
+		SetWrap(false)
+	search := tview.NewInputField().
+		SetFieldWidth(0).
+		SetFieldBackgroundColor(tcell.ColorBlack)
 
-	// Display the timetable based on the selected intake code
-	intakeCodes.SetSelectedFunc(func(row, column int) {
-		timetable.SetText(intakes[row] + "\n\n")
-		for i := range tb {
-			if intakes[row] == tb[i].Intake {
-				fmt.Fprintln(
-					w, tb[i].Day + "\t" +
-					tb[i].Date + "\t" +
-					tb[i].StartTime + "-" + tb[i].EndTime + "\t" +
-					tb[i].Room + "\t" +
-					tb[i].Module + "\t" +
-					tb[i].LectID,
-				)
-			}
+	// Add pages
+	for i, window := range windows {
+		pageName, page := window()
+		pages.AddPage(pageName, page, true, i == 0)
+	}
+
+	// Display hint
+	fmt.Fprintf(info, "t:[darkcyan]%s[white]  ", "Timetable")
+	fmt.Fprintf(info, "b:[darkcyan]%s[white]  ", "Browse")
+	fmt.Fprintf(info, "/:[darkcyan]%s[white]  ", "Search")
+
+	// Organize widgets placement with flex layout
+	flex.SetDirection(tview.FlexRow).
+		AddItem(pages, 0, 1, true).
+		AddItem(info, 1, 1, false).
+		AddItem(search, 1, 1, false)
+
+	// Set keybindings
+	pages.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		switch event.Rune() {
+		case 't':
+			pages.SwitchToPage("Timetable")
+			return nil
+		case 'b':
+			pages.SwitchToPage("Browse")
+			return nil
+		case '/':
+			app.SetFocus(search)
+			return nil
 		}
-		w.Flush()
-	})
 
-	intakeCodes.SetBorder(true)
-	timetable.SetBorder(true)
-
-	// Layout widgets with Flexbox
-	flex.AddItem(tview.NewFlex().SetDirection(tview.FlexRow).
-		AddItem(searchBox, 1, 1, false).
-		AddItem(tview.NewFlex().SetDirection(tview.FlexColumn).
-			AddItem(intakeCodes, 0, 1, true).
-			AddItem(timetable, 0, 5, false), 0, 25, true), 0, 1, true)
-
-	// Switch focus with Tab key
-	intakeCodes.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		if event.Key() == tcell.KeyTab {
-			app.SetFocus(searchBox)
-		}
 		return event
 	})
 
-	searchBox.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		if event.Key() == tcell.KeyTab {
-			app.SetFocus(intakeCodes)
+	search.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		if event.Key() == tcell.KeyEsc {
+			app.SetFocus(pages)
+			search.SetText("")
+			return nil
 		}
+
 		return event
-	})
-
-	// Very basic search function
-	searchBox.SetDoneFunc(func(key tcell.Key) {
-		found := false
-		for i := range tb {
-			if searchBox.GetText() == tb[i].Intake {
-				found = true
-
-				timetable.SetText(tb[i].Intake + "\n\n")
-				fmt.Fprintln(
-					w, tb[i].Day + "\t" +
-					tb[i].Date + "\t" +
-					tb[i].StartTime + "-" + tb[i].EndTime + "\t" +
-					tb[i].Room + "\t" +
-					tb[i].Module + "\t" +
-					tb[i].LectID,
-				)
-
-				for row, j := range intakes {
-					if tb[i].Intake == j {
-						intakeCodes.Select(row, 0)
-					}
-				}
-			}
-		}
-		w.Flush()
-
-		if !found {
-			timetable.SetText("No search result found.")
-		}
 	})
 
 	// Run the application
-	if err := app.SetRoot(flex, true).SetFocus(flex).Run(); err != nil {
+	if err := app.SetRoot(flex, true).Run(); err != nil {
 		panic(err)
 	}
 }

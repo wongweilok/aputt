@@ -8,7 +8,7 @@ import (
 	"io/ioutil"
 )
 
-type Timetable []struct {
+type Timetable_Data []struct {
 	Intake string `json:"INTAKE"`
 	Module string `json:"MODID"`
 	Day string `json:"DAY"`
@@ -21,7 +21,7 @@ type Timetable []struct {
 	EndTime string `json:"TIME_TO"`
 }
 
-var tb Timetable
+var tb Timetable_Data
 
 func removeDup(intake_dupList []string) []string {
 	intakeMap := make(map[string]bool)
