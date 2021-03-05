@@ -75,6 +75,11 @@ func main() {
 			app.SetFocus(pages)
 			search.SetText("")
 			return nil
+		} else if event.Key() == tcell.KeyEnter {
+			pageName, page := Custom_Browse(search.GetText())
+			pages.AddAndSwitchToPage(pageName, page, true)
+			app.SetFocus(pages)
+			search.SetText("")
 		}
 
 		return event
