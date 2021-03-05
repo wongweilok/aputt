@@ -7,16 +7,15 @@ import (
 	"github.com/rivo/tview"
 )
 
+var w = new(tabwriter.Writer)
+
 func Timetable() (string, tview.Primitive) {
-	timetable := tview.NewTextView()
-
-	parse_to_array("https://s3-ap-southeast-1.amazonaws.com/open-ws/weektimetable")
-
-	w := new(tabwriter.Writer)
 	w.Init(timetable, 5, 0, 2, ' ', 0)
 
+	// Temporary hardcoded intake code
 	myintake := "UC2F2008SE"
 
+	// Display timetable
 	timetable.SetText(myintake + "\n\n")
 	for i := range tb {
 		if myintake == tb[i].Intake {
@@ -31,8 +30,6 @@ func Timetable() (string, tview.Primitive) {
 		}
 	}
 	w.Flush()
-
-	timetable.SetBorder(true)
 
 	return "Timetable", timetable
 }

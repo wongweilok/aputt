@@ -11,9 +11,14 @@ import (
 
 type Window func() (string, tview.Primitive)
 
+// Global widgets
 var app = tview.NewApplication()
+var pages = tview.NewPages()
+var timetable = tview.NewTextView()
 
 func main() {
+	parse_JSON("https://s3-ap-southeast-1.amazonaws.com/open-ws/weektimetable")
+
 	windows := []Window{
 		Timetable,
 		Browse,
@@ -21,7 +26,6 @@ func main() {
 
 	// Initialize UI widgets
 	flex := tview.NewFlex()
-	pages := tview.NewPages()
 	info := tview.NewTextView().
 		SetDynamicColors(true).
 		SetWrap(false)
@@ -34,6 +38,8 @@ func main() {
 		pageName, page := window()
 		pages.AddPage(pageName, page, true, i == 0)
 	}
+
+	pages.SetBorder(true)
 
 	// Display hint
 	fmt.Fprintf(info, "t:[darkcyan]%s[white]  ", "Timetable")
@@ -62,6 +68,7 @@ func main() {
 
 		return event
 	})
+
 
 	search.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Key() == tcell.KeyEsc {

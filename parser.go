@@ -37,19 +37,20 @@ func removeDup(intake_dupList []string) []string {
 	return intakeList
 }
 
-func parse_to_array(link string) []string {
+func parse_JSON(link string) {
 	// Create HTTPS Get request from open web service API
 	resp, _ := http.Get(link)
 	bytes, _ := ioutil.ReadAll(resp.Body)
 	resp.Body.Close()
 
 	// Parse JSON into "Timetable" struct data type
-	//var tb Timetable
 	err := json.Unmarshal([]byte(bytes), &tb)
 	if err != nil {
 		panic(err)
 	}
+}
 
+func intake_arrayList() []string {
 	// Add all intake codes into a slice
 	intake_dupList := []string{}
 
