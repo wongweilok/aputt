@@ -16,6 +16,12 @@ var app = tview.NewApplication()
 var pages = tview.NewPages()
 var timetable = tview.NewTextView()
 
+func removePage(pageName string) {
+	if pages.HasPage(pageName) {
+		pages.RemovePage(pageName)
+	}
+}
+
 func main() {
 	parse_JSON("https://s3-ap-southeast-1.amazonaws.com/open-ws/weektimetable")
 
@@ -57,9 +63,11 @@ func main() {
 		switch event.Rune() {
 		case 't':
 			pages.SwitchToPage("Timetable")
+			removePage("Temp")
 			return nil
 		case 'b':
 			pages.SwitchToPage("Browse")
+			removePage("Temp")
 			return nil
 		case '/':
 			app.SetFocus(search)
@@ -76,7 +84,8 @@ func main() {
 			search.SetText("")
 			return nil
 		} else if event.Key() == tcell.KeyEnter {
-			pageName, page := Custom_Browse(search.GetText())
+			removePage("Temp")
+			pageName, page := Temp(search.GetText())
 			pages.AddAndSwitchToPage(pageName, page, true)
 			app.SetFocus(pages)
 			search.SetText("")

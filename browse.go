@@ -47,7 +47,7 @@ func Browse() (string, tview.Primitive) {
 	return "Browse", browse
 }
 
-func Custom_Browse(query string) (string, tview.Primitive) {
+func Temp(query string) (string, tview.Primitive) {
 	intakes := intake_arrayList()
 	short_list := []string{}
 
@@ -91,8 +91,8 @@ func Custom_Browse(query string) (string, tview.Primitive) {
 		w.Flush()
 
 		// Remove this temporary page
-		pages.RemovePage("Custom_Browse")
+		pages.RemovePage("Temp")
 	})
 
-	return "Custom_Browse", custom_browse
+	return "Temp", custom_browse
 }
