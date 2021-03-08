@@ -1,4 +1,4 @@
-module github.com/Wayloque/aputt
+module github.com/wongweilok/aputt
 
 go 1.15
 
