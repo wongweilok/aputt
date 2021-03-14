@@ -24,11 +24,11 @@ func checkConfig() bool {
 }
 
 func createConfig() {
-	os.Mkdir(configPath, 0644)
+	os.Mkdir(configPath, 0755)
 }
 
-func writeConfig(data []byte) {
-	err := os.WriteFile(configPath + fileName, data, 0644)
+func writeConfig(data string) {
+	err := os.WriteFile(configPath + fileName, []byte(data), 0644)
 	if err != nil {
 		panic(err)
 	}
@@ -39,6 +39,7 @@ func readConfig() string {
 	if err != nil {
 		panic(err)
 	}
+	defer file.Close()
 
 	sc := bufio.NewScanner(file)
 	sc.Scan()

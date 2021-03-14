@@ -4,10 +4,14 @@ import (
 	"fmt"
 	"text/tabwriter"
 
+	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
 
-var w = new(tabwriter.Writer)
+var (
+	intake_code string
+	w = new(tabwriter.Writer)
+)
 
 func Timetable() (string, tview.Primitive) {
 	w.Init(timetable, 5, 0, 2, ' ', 0)
@@ -17,6 +21,7 @@ func Timetable() (string, tview.Primitive) {
 		timetable.SetText("Press 'b' to browse and select an intake.")
 	} else {
 		// Get intake code from config file
+		intake_code = readConfig()
 		myintake := readConfig()
 
 		// Display timetable
@@ -35,6 +40,18 @@ func Timetable() (string, tview.Primitive) {
 		}
 		w.Flush()
 	}
+
+	timetable.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		if event.Rune() == 's' {
+			if !checkConfig() {
+				createConfig()
+			}
+			writeConfig(intake_code)
+
+			return nil
+		}
+		return event
+	})
 
 	return "Timetable", timetable
 }

@@ -12,9 +12,11 @@ import (
 type Window func() (string, tview.Primitive)
 
 // Global widgets
-var app = tview.NewApplication()
-var pages = tview.NewPages()
-var timetable = tview.NewTextView()
+var (
+	app = tview.NewApplication()
+	pages = tview.NewPages()
+	timetable = tview.NewTextView()
+)
 
 func removePage(pageName string) {
 	if pages.HasPage(pageName) {
@@ -51,6 +53,7 @@ func main() {
 	fmt.Fprintf(info, "t:[darkcyan]%s[white]  ", "Timetable")
 	fmt.Fprintf(info, "b:[darkcyan]%s[white]  ", "Browse")
 	fmt.Fprintf(info, "/:[darkcyan]%s[white]  ", "Search")
+	fmt.Fprintf(info, "s:[darkcyan]%s[white]  ", "Search")
 
 	// Organize widgets placement with flex layout
 	flex.SetDirection(tview.FlexRow).

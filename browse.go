@@ -28,6 +28,8 @@ func Browse() (string, tview.Primitive) {
 	browse.SetSelectedFunc(func(row, column int) {
 		pages.SwitchToPage("Timetable")
 
+		intake_code = intakes[row]
+
 		timetable.SetText(intakes[row] + "\n\n")
 		for i := range tb {
 			if intakes[row] == tb[i].Intake {
@@ -74,6 +76,8 @@ func Temp(query string) (string, tview.Primitive) {
 	// Display timetable of the selected intake code
 	custom_browse.SetSelectedFunc(func(row, column int) {
 		pages.SwitchToPage("Timetable")
+
+		intake_code = short_list[row]
 
 		timetable.SetText(short_list[row] + "\n\n")
 		for i := range tb {
