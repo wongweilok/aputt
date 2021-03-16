@@ -16,6 +16,7 @@ var (
 	app = tview.NewApplication()
 	pages = tview.NewPages()
 	timetable = tview.NewTextView()
+	search = tview.NewInputField()
 )
 
 func removePage(pageName string) {
@@ -37,9 +38,6 @@ func main() {
 	info := tview.NewTextView().
 		SetDynamicColors(true).
 		SetWrap(false)
-	search := tview.NewInputField().
-		SetFieldWidth(0).
-		SetFieldBackgroundColor(tcell.ColorBlack)
 
 	// Add pages
 	for i, window := range windows {
@@ -49,11 +47,14 @@ func main() {
 
 	pages.SetBorder(true)
 
+	search.SetFieldWidth(0).
+		SetFieldBackgroundColor(tcell.ColorBlack)
+
 	// Display hint
 	fmt.Fprintf(info, "t:[darkcyan]%s[white]  ", "Timetable")
 	fmt.Fprintf(info, "b:[darkcyan]%s[white]  ", "Browse")
 	fmt.Fprintf(info, "/:[darkcyan]%s[white]  ", "Search")
-	fmt.Fprintf(info, "s:[darkcyan]%s[white]  ", "Search")
+	fmt.Fprintf(info, "s:[darkcyan]%s[white]  ", "Set Default")
 
 	// Organize widgets placement with flex layout
 	flex.SetDirection(tview.FlexRow).
@@ -73,6 +74,7 @@ func main() {
 			removePage("Temp")
 			return nil
 		case '/':
+			search.SetText("")
 			app.SetFocus(search)
 			return nil
 		}

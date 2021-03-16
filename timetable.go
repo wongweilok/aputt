@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 	"text/tabwriter"
 
 	"github.com/gdamore/tcell/v2"
@@ -43,10 +44,20 @@ func Timetable() (string, tview.Primitive) {
 
 	timetable.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Rune() == 's' {
+			// Create config directory if not exist
 			if !checkConfig() {
 				createConfig()
 			}
-			writeConfig(intake_code)
+
+			// Set intake code into config file and display message
+			if readConfig() != intake_code {
+				writeConfig(intake_code)
+				search.SetText("Current intake code has been set as default.")
+				go clearText()
+			} else {
+				search.SetText("Current intake code is already the default.")
+				go clearText()
+			}
 
 			return nil
 		}
@@ -54,4 +65,14 @@ func Timetable() (string, tview.Primitive) {
 	})
 
 	return "Timetable", timetable
+}
+
+func clearText() {
+	// Clear message after 3 seconds
+	time.Sleep(3 * time.Second)
+	app.QueueUpdateDraw(func() {
+		if len(search.GetText()) >= 24 {
+			search.SetText("")
+		}
+	})
 }
