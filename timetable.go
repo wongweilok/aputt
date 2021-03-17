@@ -45,12 +45,16 @@ func Timetable() (string, tview.Primitive) {
 	timetable.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Rune() == 's' {
 			// Create config directory if not exist
-			if !checkConfig() {
-				createConfig()
+			if !checkConfigDir() {
+				createConfigDir()
 			}
 
 			// Set intake code into config file and display message
-			if readConfig() != intake_code {
+			if !checkConfig() {
+				writeConfig(intake_code)
+				search.SetText("Current intake code has been set as default.")
+				go clearText()
+			} else if readConfig() != intake_code {
 				writeConfig(intake_code)
 				search.SetText("Current intake code has been set as default.")
 				go clearText()

@@ -15,7 +15,7 @@ var (
 	configPath string = configDir + fileDir
 )
 
-func checkConfig() bool {
+func checkConfigDir() bool {
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
 		return false
 	} else {
@@ -23,8 +23,16 @@ func checkConfig() bool {
 	}
 }
 
-func createConfig() {
+func createConfigDir() {
 	os.Mkdir(configPath, 0755)
+}
+
+func checkConfig() bool {
+	if _, err := os.Stat(configPath + fileName); os.IsNotExist(err) {
+		return false
+	} else {
+		return true
+	}
 }
 
 func writeConfig(data string) {
