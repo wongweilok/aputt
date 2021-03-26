@@ -3,6 +3,6 @@ module github.com/wongweilok/aputt
 go 1.15
 
 require (
-	github.com/gdamore/tcell/v2 v2.1.0
-	github.com/rivo/tview v0.0.0-20201204190810-5406288b8e4e
+	github.com/gdamore/tcell/v2 v2.2.0
+	github.com/rivo/tview v0.0.0-20210312174852-ae9464cc3598
 )
