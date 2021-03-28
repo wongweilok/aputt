@@ -37,6 +37,9 @@ var (
 	search    = tview.NewInputField()
 )
 
+// URL of the timetable API
+const URL string = "https://s3-ap-southeast-1.amazonaws.com/open-ws/weektimetable"
+
 func removePage(pageName string) {
 	if pages.HasPage(pageName) {
 		pages.RemovePage(pageName)
@@ -44,7 +47,7 @@ func removePage(pageName string) {
 }
 
 func main() {
-	parse_JSON("https://s3-ap-southeast-1.amazonaws.com/open-ws/weektimetable")
+	parseJSON(URL)
 
 	windows := []Window{
 		Timetable,
