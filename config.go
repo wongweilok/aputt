@@ -25,21 +25,20 @@ import (
 )
 
 const (
-	fileDir string = "/aputt/"
+	fileDir  string = "/aputt/"
 	fileName string = "config"
 )
 
 var (
-	configDir, _ = os.UserConfigDir()
-	configPath string = configDir + fileDir
+	configDir, _        = os.UserConfigDir()
+	configPath   string = configDir + fileDir
 )
 
 func checkConfigDir() bool {
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
 		return false
-	} else {
-		return true
 	}
+	return true
 }
 
 func createConfigDir() {
@@ -49,13 +48,12 @@ func createConfigDir() {
 func checkConfig() bool {
 	if _, err := os.Stat(configPath + fileName); os.IsNotExist(err) {
 		return false
-	} else {
-		return true
 	}
+	return true
 }
 
 func writeConfig(data string) {
-	err := os.WriteFile(configPath + fileName, []byte(data), 0644)
+	err := os.WriteFile(configPath+fileName, []byte(data), 0644)
 	if err != nil {
 		panic(err)
 	}

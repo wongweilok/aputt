@@ -21,18 +21,19 @@ package main
 
 import (
 	"fmt"
-	"time"
 	"text/tabwriter"
+	"time"
 
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
 
 var (
-	intake_code string
-	w = new(tabwriter.Writer)
+	intakeCode string
+	w          = new(tabwriter.Writer)
 )
 
+// Timetable returns its properties and content
 func Timetable() (string, tview.Primitive) {
 	w.Init(timetable, 5, 0, 2, ' ', 0)
 
@@ -41,7 +42,7 @@ func Timetable() (string, tview.Primitive) {
 		timetable.SetText("Press 'b' to browse and select an intake.")
 	} else {
 		// Get intake code from config file
-		intake_code = readConfig()
+		intakeCode = readConfig()
 		myintake := readConfig()
 
 		// Display timetable
@@ -49,12 +50,12 @@ func Timetable() (string, tview.Primitive) {
 		for i := range tb {
 			if myintake == tb[i].Intake {
 				fmt.Fprintln(
-					w, tb[i].Day + "\t" +
-					tb[i].Date + "\t" +
-					tb[i].StartTime + "-" + tb[i].EndTime + "\t" +
-					tb[i].Room + "\t" +
-					tb[i].Module + "\t" +
-					tb[i].LectID,
+					w, tb[i].Day+"\t"+
+						tb[i].Date+"\t"+
+						tb[i].StartTime+"-"+tb[i].EndTime+"\t"+
+						tb[i].Room+"\t"+
+						tb[i].Module+"\t"+
+						tb[i].LectID,
 				)
 			}
 		}
@@ -70,11 +71,11 @@ func Timetable() (string, tview.Primitive) {
 
 			// Set intake code into config file and display message
 			if !checkConfig() {
-				writeConfig(intake_code)
+				writeConfig(intakeCode)
 				search.SetText("Current intake code has been set as default.")
 				go clearText()
-			} else if readConfig() != intake_code {
-				writeConfig(intake_code)
+			} else if readConfig() != intakeCode {
+				writeConfig(intakeCode)
 				search.SetText("Current intake code has been set as default.")
 				go clearText()
 			} else {

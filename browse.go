@@ -27,8 +27,9 @@ import (
 	"github.com/rivo/tview"
 )
 
+// Browse return its properties and list of intake code
 func Browse() (string, tview.Primitive) {
-	intakes := intake_arrayList()
+	intakes := intakeArrayList()
 
 	w.Init(timetable, 5, 0, 2, ' ', 0)
 
@@ -47,18 +48,18 @@ func Browse() (string, tview.Primitive) {
 	browse.SetSelectedFunc(func(row, column int) {
 		pages.SwitchToPage("Timetable")
 
-		intake_code = intakes[row]
+		intakeCode = intakes[row]
 
 		timetable.SetText(intakes[row] + "\n\n")
 		for i := range tb {
 			if intakes[row] == tb[i].Intake {
 				fmt.Fprintln(
-					w, tb[i].Day + "\t" +
-					tb[i].Date + "\t" +
-					tb[i].StartTime + "-" + tb[i].EndTime + "\t" +
-					tb[i].Room + "\t" +
-					tb[i].Module + "\t" +
-					tb[i].LectID,
+					w, tb[i].Day+"\t"+
+						tb[i].Date+"\t"+
+						tb[i].StartTime+"-"+tb[i].EndTime+"\t"+
+						tb[i].Room+"\t"+
+						tb[i].Module+"\t"+
+						tb[i].LectID,
 				)
 			}
 		}
@@ -68,46 +69,47 @@ func Browse() (string, tview.Primitive) {
 	return "Browse", browse
 }
 
+// Temp is created for displaying search results
 func Temp(query string) (string, tview.Primitive) {
-	intakes := intake_arrayList()
-	short_list := []string{}
+	intakes := intakeArrayList()
+	shortList := []string{}
 
 	w.Init(timetable, 5, 0, 2, ' ', 0)
 
-	custom_browse := tview.NewTable().
+	customBrowse := tview.NewTable().
 		SetSelectable(true, false)
 
 	// Filter the intake code list with search keyword
 	for _, i := range intakes {
 		if strings.Contains(i, query) {
-			short_list = append(short_list, i)
+			shortList = append(shortList, i)
 		}
 	}
 
 	// Display the custom intake code list
-	for row, i := range short_list {
+	for row, i := range shortList {
 		tableCell := tview.NewTableCell(i).
 			SetTextColor(tcell.ColorWhite)
 
-		custom_browse.SetCell(row, 0, tableCell)
+		customBrowse.SetCell(row, 0, tableCell)
 	}
 
 	// Display timetable of the selected intake code
-	custom_browse.SetSelectedFunc(func(row, column int) {
+	customBrowse.SetSelectedFunc(func(row, column int) {
 		pages.SwitchToPage("Timetable")
 
-		intake_code = short_list[row]
+		intakeCode = shortList[row]
 
-		timetable.SetText(short_list[row] + "\n\n")
+		timetable.SetText(shortList[row] + "\n\n")
 		for i := range tb {
-			if short_list[row] == tb[i].Intake {
+			if shortList[row] == tb[i].Intake {
 				fmt.Fprintln(
-					w, tb[i].Day + "\t" +
-					tb[i].Date + "\t" +
-					tb[i].StartTime + "-" + tb[i].EndTime + "\t" +
-					tb[i].Room + "\t" +
-					tb[i].Module + "\t" +
-					tb[i].LectID,
+					w, tb[i].Day+"\t"+
+						tb[i].Date+"\t"+
+						tb[i].StartTime+"-"+tb[i].EndTime+"\t"+
+						tb[i].Room+"\t"+
+						tb[i].Module+"\t"+
+						tb[i].LectID,
 				)
 			}
 		}
@@ -117,5 +119,5 @@ func Temp(query string) (string, tview.Primitive) {
 		pages.RemovePage("Temp")
 	})
 
-	return "Temp", custom_browse
+	return "Temp", customBrowse
 }

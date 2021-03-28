@@ -26,14 +26,15 @@ import (
 	"github.com/rivo/tview"
 )
 
+// Window holds all widgets properties and content
 type Window func() (string, tview.Primitive)
 
 // Global widgets
 var (
-	app = tview.NewApplication()
-	pages = tview.NewPages()
+	app       = tview.NewApplication()
+	pages     = tview.NewPages()
 	timetable = tview.NewTextView()
-	search = tview.NewInputField()
+	search    = tview.NewInputField()
 )
 
 func removePage(pageName string) {
@@ -98,7 +99,6 @@ func main() {
 
 		return event
 	})
-
 
 	search.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Key() == tcell.KeyEsc {
