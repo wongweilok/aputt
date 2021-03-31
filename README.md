@@ -22,7 +22,6 @@ $ go get -u github.com/wongweilok/aputt
 ## TODO List
 
 1. Main features
-   - Display timetable for current week only.
    - Color output
      * Indicate current ongoing class
      * Indicate incoming class
@@ -30,6 +29,7 @@ $ go get -u github.com/wongweilok/aputt
 2. Others
    - Offline support.
    - Improve codes.
+   - Remove redundant schedules.
 
 ## License
 
