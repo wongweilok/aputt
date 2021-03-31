@@ -31,6 +31,8 @@ import (
 var (
 	intakeCode string
 	w          = new(tabwriter.Writer)
+	// Get week number of current time
+	_, weekNo = time.Now().ISOWeek()
 )
 
 // Timetable returns its properties and content
@@ -49,14 +51,16 @@ func Timetable() (string, tview.Primitive) {
 		timetable.SetText(myintake + "\n\n")
 		for i := range tb {
 			if myintake == tb[i].Intake {
-				fmt.Fprintln(
-					w, tb[i].Day+"\t"+
-						tb[i].Date+"\t"+
-						tb[i].StartTime+"-"+tb[i].EndTime+"\t"+
-						tb[i].Room+"\t"+
-						tb[i].Module+"\t"+
-						tb[i].LectID,
-				)
+				if weekNo == weekOf(tb[i].DateISO) {
+					fmt.Fprintln(
+						w, tb[i].Day+"\t"+
+							tb[i].Date+"\t"+
+							tb[i].StartTime+"-"+tb[i].EndTime+"\t"+
+							tb[i].Room+"\t"+
+							tb[i].Module+"\t"+
+							tb[i].LectID,
+					)
+				}
 			}
 		}
 		w.Flush()
@@ -89,6 +93,14 @@ func Timetable() (string, tview.Primitive) {
 	})
 
 	return "Timetable", timetable
+}
+
+// Get week number of a date
+func weekOf(dateISO string) int {
+	date, _ := time.Parse(time.RFC3339, dateISO)
+	_, weekNo := date.ISOWeek()
+
+	return weekNo
 }
 
 func clearText() {

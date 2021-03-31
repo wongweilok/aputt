@@ -53,14 +53,16 @@ func Browse() (string, tview.Primitive) {
 		timetable.SetText(intakes[row] + "\n\n")
 		for i := range tb {
 			if intakes[row] == tb[i].Intake {
-				fmt.Fprintln(
-					w, tb[i].Day+"\t"+
-						tb[i].Date+"\t"+
-						tb[i].StartTime+"-"+tb[i].EndTime+"\t"+
-						tb[i].Room+"\t"+
-						tb[i].Module+"\t"+
-						tb[i].LectID,
-				)
+				if weekNo == weekOf(tb[i].DateISO) {
+					fmt.Fprintln(
+						w, tb[i].Day+"\t"+
+							tb[i].Date+"\t"+
+							tb[i].StartTime+"-"+tb[i].EndTime+"\t"+
+							tb[i].Room+"\t"+
+							tb[i].Module+"\t"+
+							tb[i].LectID,
+					)
+				}
 			}
 		}
 		w.Flush()
@@ -103,14 +105,16 @@ func Temp(query string) (string, tview.Primitive) {
 		timetable.SetText(shortList[row] + "\n\n")
 		for i := range tb {
 			if shortList[row] == tb[i].Intake {
-				fmt.Fprintln(
-					w, tb[i].Day+"\t"+
-						tb[i].Date+"\t"+
-						tb[i].StartTime+"-"+tb[i].EndTime+"\t"+
-						tb[i].Room+"\t"+
-						tb[i].Module+"\t"+
-						tb[i].LectID,
-				)
+				if weekNo == weekOf(tb[i].DateISO) {
+					fmt.Fprintln(
+						w, tb[i].Day+"\t"+
+							tb[i].Date+"\t"+
+							tb[i].StartTime+"-"+tb[i].EndTime+"\t"+
+							tb[i].Room+"\t"+
+							tb[i].Module+"\t"+
+							tb[i].LectID,
+					)
+				}
 			}
 		}
 		w.Flush()

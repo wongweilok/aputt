@@ -30,11 +30,10 @@ type TimetableData []struct {
 	Intake    string `json:"INTAKE"`
 	Module    string `json:"MODID"`
 	Day       string `json:"DAY"`
-	Location  string `json:"LOCATION"`
 	Room      string `json:"ROOM"`
 	LectID    string `json:"LECTID"`
-	LectName  string `json:"NAME"`
 	Date      string `json:"DATESTAMP"`
+	DateISO   string `json:"TIME_FROM_ISO"`
 	StartTime string `json:"TIME_FROM"`
 	EndTime   string `json:"TIME_TO"`
 }
