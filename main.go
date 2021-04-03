@@ -72,10 +72,11 @@ func main() {
 		SetFieldBackgroundColor(tcell.ColorBlack)
 
 	// Display hint
-	fmt.Fprintf(info, "t:[darkcyan]%s[white]  ", "Timetable")
-	fmt.Fprintf(info, "b:[darkcyan]%s[white]  ", "Browse")
-	fmt.Fprintf(info, "/:[darkcyan]%s[white]  ", "Search")
-	fmt.Fprintf(info, "s:[darkcyan]%s[white]  ", "Set Default")
+	fmt.Fprintf(info, "q:[blue]%s[white]  ", "Quit")
+	fmt.Fprintf(info, "t:[blue]%s[white]  ", "Timetable")
+	fmt.Fprintf(info, "b:[blue]%s[white]  ", "Browse")
+	fmt.Fprintf(info, "/:[blue]%s[white]  ", "Search")
+	fmt.Fprintf(info, "s:[blue]%s[white]  ", "Set Default")
 
 	// Organize widgets placement with flex layout
 	flex.SetDirection(tview.FlexRow).
@@ -86,6 +87,8 @@ func main() {
 	// Set keybindings
 	pages.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Rune() {
+		case 'q':
+			app.Stop()
 		case 't':
 			pages.SwitchToPage("Timetable")
 			removePage("Temp")
