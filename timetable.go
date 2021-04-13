@@ -47,11 +47,14 @@ func Timetable() (string, tview.Primitive) {
 		intakeCode = readConfig()
 		myintake := readConfig()
 
+
 		// Display timetable
+		count := 0
 		timetable.SetText(myintake + "\n\n")
 		for i := range tb {
 			if myintake == tb[i].Intake {
 				if weekNo == weekOf(tb[i].DateISO) {
+					count++
 					fmt.Fprintln(
 						w, tb[i].Day+"\t"+
 							tb[i].Date+"\t"+
@@ -62,6 +65,9 @@ func Timetable() (string, tview.Primitive) {
 					)
 				}
 			}
+		}
+		if count == 0 {
+			fmt.Fprintln(w, "No classes for this week.")
 		}
 		w.Flush()
 	}

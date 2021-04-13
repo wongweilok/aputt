@@ -50,10 +50,12 @@ func Browse() (string, tview.Primitive) {
 
 		intakeCode = intakes[row]
 
+		count := 0
 		timetable.SetText(intakes[row] + "\n\n")
 		for i := range tb {
 			if intakes[row] == tb[i].Intake {
 				if weekNo == weekOf(tb[i].DateISO) {
+					count++
 					fmt.Fprintln(
 						w, tb[i].Day+"\t"+
 							tb[i].Date+"\t"+
@@ -64,6 +66,9 @@ func Browse() (string, tview.Primitive) {
 					)
 				}
 			}
+		}
+		if count == 0 {
+			fmt.Fprintln(w, "No classes for this week.")
 		}
 		w.Flush()
 	})
@@ -102,10 +107,12 @@ func Temp(query string) (string, tview.Primitive) {
 
 		intakeCode = shortList[row]
 
+		count := 0
 		timetable.SetText(shortList[row] + "\n\n")
 		for i := range tb {
 			if shortList[row] == tb[i].Intake {
 				if weekNo == weekOf(tb[i].DateISO) {
+					count++
 					fmt.Fprintln(
 						w, tb[i].Day+"\t"+
 							tb[i].Date+"\t"+
@@ -116,6 +123,9 @@ func Temp(query string) (string, tview.Primitive) {
 					)
 				}
 			}
+		}
+		if count == 0 {
+			fmt.Fprintln(w, "No classes for this week.")
 		}
 		w.Flush()
 
