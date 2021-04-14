@@ -47,23 +47,20 @@ func Timetable() (string, tview.Primitive) {
 		intakeCode = readConfig()
 		myintake := readConfig()
 
-
 		// Display timetable
 		count := 0
 		timetable.SetText(myintake + "\n\n")
 		for i := range tb {
-			if myintake == tb[i].Intake {
-				if weekNo == weekOf(tb[i].DateISO) {
-					count++
-					fmt.Fprintln(
-						w, tb[i].Day+"\t"+
-							tb[i].Date+"\t"+
-							tb[i].StartTime+"-"+tb[i].EndTime+"\t"+
-							tb[i].Room+"\t"+
-							tb[i].Module+"\t"+
-							tb[i].LectID,
-					)
-				}
+			if myintake == tb[i].Intake && weekNo == weekOf(tb[i].DateISO) {
+				count++
+				fmt.Fprintln(
+					w, tb[i].Day+"\t"+
+						tb[i].Date+"\t"+
+						tb[i].StartTime+"-"+tb[i].EndTime+"\t"+
+						tb[i].Room+"\t"+
+						tb[i].Module+"\t"+
+						tb[i].LectID,
+				)
 			}
 		}
 		if count == 0 {
