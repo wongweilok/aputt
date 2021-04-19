@@ -29,7 +29,6 @@ $ go get -u github.com/wongweilok/aputt
 2. Others
    - Offline support.
    - Improve codes.
-   - Remove redundant schedules.
 
 ## License
 

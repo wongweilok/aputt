@@ -31,8 +31,7 @@ import (
 var (
 	intakeCode string
 	w          = new(tabwriter.Writer)
-	// Get week number of current time
-	_, weekNo = time.Now().ISOWeek()
+	_, weekNo  = time.Now().ISOWeek() // Get week number of current time
 )
 
 // Timetable returns its properties and content
@@ -50,6 +49,7 @@ func Timetable() (string, tview.Primitive) {
 		// Display timetable
 		count := 0
 		timetable.SetText(myintake + "\n\n")
+		tb = rmDupSchedule(tb)
 		for i := range tb {
 			if myintake == tb[i].Intake && weekNo == weekOf(tb[i].DateISO) {
 				count++
@@ -114,4 +114,19 @@ func clearText() {
 			search.SetText("")
 		}
 	})
+}
+
+// Remove duplicate timetable schedule
+func rmDupSchedule(tb []TimetableData) []TimetableData {
+	var tbUnique []TimetableData
+	tbMap := make(map[TimetableData]bool)
+
+	for _, slot := range tb {
+		if _, ok := tbMap[slot]; !ok {
+			tbMap[slot] = true
+			tbUnique = append(tbUnique, slot)
+		}
+	}
+
+	return tbUnique
 }
