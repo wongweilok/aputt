@@ -11,7 +11,7 @@ A small terminal application written in GO that display Asia Pacific University 
 ## Installation
 
 ```
-$ go get -u github.com/wongweilok/aputt
+$ go get github.com/wongweilok/aputt
 ```
 
 ## Third-party libraries used
@@ -28,6 +28,7 @@ $ go get -u github.com/wongweilok/aputt
 
 2. Others
    - Offline support.
+   - Command-line arguments
    - Improve codes.
 
 ## License
