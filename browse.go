@@ -52,7 +52,6 @@ func Browse() (string, tview.Primitive) {
 
 		count := 0
 		timetable.SetText(intakes[row] + "\n\n")
-		tb = rmDupSchedule(tb)
 		for i := range tb {
 			if intakes[row] == tb[i].Intake && weekNo == weekOf(tb[i].DateISO) {
 				count++
@@ -108,7 +107,6 @@ func Temp(query string) (string, tview.Primitive) {
 
 		count := 0
 		timetable.SetText(shortList[row] + "\n\n")
-		tb = rmDupSchedule(tb)
 		for i := range tb {
 			if shortList[row] == tb[i].Intake && weekNo == weekOf(tb[i].DateISO) {
 				count++
