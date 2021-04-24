@@ -30,7 +30,6 @@ $ go get github.com/wongweilok/aputt
    - Offline support.
    - Command-line arguments
    - Improve codes.
-   - Remove redundant schedules.
 
 ## License
 
