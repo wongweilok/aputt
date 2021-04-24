@@ -26,7 +26,7 @@ import (
 )
 
 // TimetableData holds all timetable information
-type TimetableData []struct {
+type TimetableData struct {
 	Intake    string `json:"INTAKE"`
 	Module    string `json:"MODID"`
 	Day       string `json:"DAY"`
@@ -36,16 +36,17 @@ type TimetableData []struct {
 	DateISO   string `json:"TIME_FROM_ISO"`
 	StartTime string `json:"TIME_FROM"`
 	EndTime   string `json:"TIME_TO"`
+	Group     string `json:"GROUPING"`
 }
 
-var tb TimetableData
+var tb []TimetableData
 
 func removeDup(intakeDupList []string) []string {
-	intakeMap := make(map[string]bool)
 	intakeList := []string{}
+	intakeMap := make(map[string]bool)
 
 	for _, intake := range intakeDupList {
-		if _, value := intakeMap[intake]; !value {
+		if _, ok := intakeMap[intake]; !ok {
 			intakeMap[intake] = true
 			intakeList = append(intakeList, intake)
 		}

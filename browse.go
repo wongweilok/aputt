@@ -52,6 +52,7 @@ func Browse() (string, tview.Primitive) {
 
 		count := 0
 		timetable.SetText(intakes[row] + "\n\n")
+		tb = rmDupSchedule(tb)
 		for i := range tb {
 			if intakes[row] == tb[i].Intake && weekNo == weekOf(tb[i].DateISO) {
 				count++
@@ -61,7 +62,8 @@ func Browse() (string, tview.Primitive) {
 						tb[i].StartTime+"-"+tb[i].EndTime+"\t"+
 						tb[i].Room+"\t"+
 						tb[i].Module+"\t"+
-						tb[i].LectID,
+						tb[i].LectID+"\t"+
+						tb[i].Group,
 				)
 			}
 		}
@@ -107,6 +109,7 @@ func Temp(query string) (string, tview.Primitive) {
 
 		count := 0
 		timetable.SetText(shortList[row] + "\n\n")
+		tb = rmDupSchedule(tb)
 		for i := range tb {
 			if shortList[row] == tb[i].Intake && weekNo == weekOf(tb[i].DateISO) {
 				count++
@@ -116,7 +119,8 @@ func Temp(query string) (string, tview.Primitive) {
 						tb[i].StartTime+"-"+tb[i].EndTime+"\t"+
 						tb[i].Room+"\t"+
 						tb[i].Module+"\t"+
-						tb[i].LectID,
+						tb[i].LectID+"\t"+
+						tb[i].Group,
 				)
 			}
 		}

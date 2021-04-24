@@ -31,8 +31,7 @@ import (
 var (
 	intakeCode string
 	w          = new(tabwriter.Writer)
-	// Get week number of current time
-	_, weekNo = time.Now().ISOWeek()
+	_, weekNo  = time.Now().ISOWeek() // Get week number of current time
 )
 
 // Timetable returns its properties and content
@@ -50,6 +49,7 @@ func Timetable() (string, tview.Primitive) {
 		// Display timetable
 		count := 0
 		timetable.SetText(myintake + "\n\n")
+		tb = rmDupSchedule(tb)
 		for i := range tb {
 			if myintake == tb[i].Intake && weekNo == weekOf(tb[i].DateISO) {
 				count++
@@ -59,7 +59,8 @@ func Timetable() (string, tview.Primitive) {
 						tb[i].StartTime+"-"+tb[i].EndTime+"\t"+
 						tb[i].Room+"\t"+
 						tb[i].Module+"\t"+
-						tb[i].LectID,
+						tb[i].LectID+"\t"+
+						tb[i].Group,
 				)
 			}
 		}
@@ -114,4 +115,61 @@ func clearText() {
 			search.SetText("")
 		}
 	})
+}
+
+// Remove duplicate timetable schedule
+func rmDupSchedule(tb []TimetableData) []TimetableData {
+	type key struct {
+		Intake    string
+		Module    string
+		Day       string
+		Room      string
+		LectID    string
+		Date      string
+		DateISO   string
+		StartTime string
+		EndTime   string
+		Group     string
+	}
+
+	var tbUnique []TimetableData
+	tbMap := make(map[key]int)
+
+	for _, slot := range tb {
+		k := key{
+			slot.Intake,
+			slot.Module,
+			slot.Day,
+			slot.Room,
+			slot.LectID,
+			slot.Date,
+			slot.DateISO,
+			slot.StartTime,
+			slot.EndTime,
+			"",
+		}
+
+		if i, ok := tbMap[k]; ok {
+			// Replace group number to 'All' for repetitive schedule
+			k = key{
+				slot.Intake,
+				slot.Module,
+				slot.Day,
+				slot.Room,
+				slot.LectID,
+				slot.Date,
+				slot.DateISO,
+				slot.StartTime,
+				slot.EndTime,
+				"All",
+			}
+
+			tbUnique[i] = TimetableData(k)
+		} else {
+			tbMap[k] = len(tbUnique)
+			tbUnique = append(tbUnique, slot)
+		}
+	}
+
+	return tbUnique
 }
