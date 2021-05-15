@@ -19,14 +19,32 @@
 
 package main
 
-// URL of the timetable API
-const URL string = "https://s3-ap-southeast-1.amazonaws.com/open-ws/weektimetable"
+import "fmt"
 
-func main() {
-	parseJSON(URL)
+// KeyInfo stores key information
+type KeyInfo struct {
+	key    rune
+	action string
+}
 
-	// Init and start application
-	widget := &Widget{}
-	widget.Init()
-	widget.Run()
+// LoadInfo displays hint of keys and its action
+func (w *Widget) LoadInfo() {
+	w.info.SetDynamicColors(true)
+	w.info.SetWrap(false)
+
+	keyInfo := []KeyInfo{
+		KeyInfo{'q', "Quit"},
+		KeyInfo{'t', "Timetable"},
+		KeyInfo{'b', "Browse"},
+		KeyInfo{'/', "Search"},
+		KeyInfo{'s', "Set Default"},
+	}
+
+	for i := range keyInfo {
+		fmt.Fprintf(
+			w.info, "%s:[blue]%s[white]  ",
+			string(keyInfo[i].key),
+			keyInfo[i].action,
+		)
+	}
 }

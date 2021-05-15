@@ -19,14 +19,10 @@
 
 package main
 
-// URL of the timetable API
-const URL string = "https://s3-ap-southeast-1.amazonaws.com/open-ws/weektimetable"
+import "github.com/gdamore/tcell/v2"
 
-func main() {
-	parseJSON(URL)
-
-	// Init and start application
-	widget := &Widget{}
-	widget.Init()
-	widget.Run()
+// LoadSearch initializes search input field
+func (w *Widget) LoadSearch() {
+	w.search.SetFieldWidth(0)
+	w.search.SetFieldBackgroundColor(tcell.ColorBlack)
 }

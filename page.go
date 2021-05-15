@@ -19,14 +19,22 @@
 
 package main
 
-// URL of the timetable API
-const URL string = "https://s3-ap-southeast-1.amazonaws.com/open-ws/weektimetable"
+import "github.com/rivo/tview"
 
-func main() {
-	parseJSON(URL)
+// Window stores specific widgets information
+type Window func() (string, tview.Primitive)
 
-	// Init and start application
-	widget := &Widget{}
-	widget.Init()
-	widget.Run()
+// SetPage setup and loads pages
+func (w *Widget) SetPage() {
+	windows := []Window{
+		w.LoadTimetable,
+		w.LoadBrowse,
+	}
+
+	for i, window := range windows {
+		pageName, page := window()
+		w.pages.AddPage(pageName, page, true, i == 0)
+	}
+
+	w.pages.SetBorder(true)
 }

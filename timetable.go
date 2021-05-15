@@ -24,23 +24,22 @@ import (
 	"text/tabwriter"
 	"time"
 
-	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
 
 var (
 	intakeCode string
-	w          = new(tabwriter.Writer)
+	writer     = new(tabwriter.Writer)
 	_, weekNo  = time.Now().ISOWeek() // Get week number of current time
 )
 
-// Timetable returns its properties and content
-func Timetable() (string, tview.Primitive) {
-	w.Init(timetable, 5, 0, 2, ' ', 0)
+// LoadTimetable displays timetable schedule
+func (w *Widget) LoadTimetable() (string, tview.Primitive) {
+	writer.Init(w.timetable, 5, 0, 2, ' ', 0)
 
 	// Check if config file exist
 	if !checkConfig() {
-		timetable.SetText("Press 'b' to browse and select an intake.")
+		w.timetable.SetText("Press 'b' to browse and select an intake.")
 	} else {
 		// Get intake code from config file
 		intakeCode = readConfig()
@@ -48,13 +47,13 @@ func Timetable() (string, tview.Primitive) {
 
 		// Display timetable
 		count := 0
-		timetable.SetText(myintake + "\n\n")
+		w.timetable.SetText(myintake + "\n\n")
 		tb = rmDupSchedule(tb)
 		for i := range tb {
 			if myintake == tb[i].Intake && weekNo == weekOf(tb[i].DateISO) {
 				count++
 				fmt.Fprintln(
-					w, tb[i].Day+"\t"+
+					writer, tb[i].Day+"\t"+
 						tb[i].Date+"\t"+
 						tb[i].StartTime+"-"+tb[i].EndTime+"\t"+
 						tb[i].Room+"\t"+
@@ -65,38 +64,12 @@ func Timetable() (string, tview.Primitive) {
 			}
 		}
 		if count == 0 {
-			fmt.Fprintln(w, "No classes for this week.")
+			fmt.Fprintln(writer, "No classes for this week.")
 		}
-		w.Flush()
+		writer.Flush()
 	}
 
-	timetable.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		if event.Rune() == 's' {
-			// Create config directory if not exist
-			if !checkConfigDir() {
-				createConfigDir()
-			}
-
-			// Set intake code into config file and display message
-			if !checkConfig() {
-				writeConfig(intakeCode)
-				search.SetText("Current intake code has been set as default.")
-				go clearText()
-			} else if readConfig() != intakeCode {
-				writeConfig(intakeCode)
-				search.SetText("Current intake code has been set as default.")
-				go clearText()
-			} else {
-				search.SetText("Current intake code is already the default.")
-				go clearText()
-			}
-
-			return nil
-		}
-		return event
-	})
-
-	return "Timetable", timetable
+	return "Timetable", w.timetable
 }
 
 // Get week number of a date
@@ -105,16 +78,6 @@ func weekOf(dateISO string) int {
 	_, weekNo := date.ISOWeek()
 
 	return weekNo
-}
-
-func clearText() {
-	// Clear message after 3 seconds
-	time.Sleep(3 * time.Second)
-	app.QueueUpdateDraw(func() {
-		if len(search.GetText()) >= 24 {
-			search.SetText("")
-		}
-	})
 }
 
 // Remove duplicate timetable schedule

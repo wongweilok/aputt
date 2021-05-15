@@ -27,37 +27,36 @@ import (
 	"github.com/rivo/tview"
 )
 
-// Browse return its properties and list of intake code
-func Browse() (string, tview.Primitive) {
+// LoadBrowse loads browse menu with intake codes and init browse menu specific settings
+func (w *Widget) LoadBrowse() (string, tview.Primitive) {
 	intakes := intakeArrayList()
 
-	w.Init(timetable, 5, 0, 2, ' ', 0)
+	writer.Init(w.timetable, 5, 0, 2, ' ', 0)
 
 	// Display list of intake codes with table
-	browse := tview.NewTable().
-		SetSelectable(true, false)
+	w.browse.SetSelectable(true, false)
 
 	for row, i := range intakes {
-		tableCell := tview.NewTableCell(i).
-			SetTextColor(tcell.ColorWhite)
+		tableCell := tview.NewTableCell(i)
+		tableCell.SetTextColor(tcell.ColorWhite)
 
-		browse.SetCell(row, 0, tableCell)
+		w.browse.SetCell(row, 0, tableCell)
 	}
 
 	// Display timetable of the selected intake code
-	browse.SetSelectedFunc(func(row, column int) {
-		pages.SwitchToPage("Timetable")
+	w.browse.SetSelectedFunc(func(row, column int) {
+		w.pages.SwitchToPage("Timetable")
 
 		intakeCode = intakes[row]
 
 		count := 0
-		timetable.SetText(intakes[row] + "\n\n")
+		w.timetable.SetText(intakes[row] + "\n\n")
 		tb = rmDupSchedule(tb)
 		for i := range tb {
 			if intakes[row] == tb[i].Intake && weekNo == weekOf(tb[i].DateISO) {
 				count++
 				fmt.Fprintln(
-					w, tb[i].Day+"\t"+
+					writer, tb[i].Day+"\t"+
 						tb[i].Date+"\t"+
 						tb[i].StartTime+"-"+tb[i].EndTime+"\t"+
 						tb[i].Room+"\t"+
@@ -68,23 +67,22 @@ func Browse() (string, tview.Primitive) {
 			}
 		}
 		if count == 0 {
-			fmt.Fprintln(w, "No classes for this week.")
+			fmt.Fprintln(writer, "No classes for this week.")
 		}
-		w.Flush()
+		writer.Flush()
 	})
 
-	return "Browse", browse
+	return "Browse", w.browse
 }
 
-// Temp is created for displaying search results
-func Temp(query string) (string, tview.Primitive) {
+// Temp is a custom browse menu that loads specific intake codes based on search query
+func (w *Widget) Temp(query string) (string, tview.Primitive) {
 	intakes := intakeArrayList()
 	shortList := []string{}
 
-	w.Init(timetable, 5, 0, 2, ' ', 0)
+	writer.Init(w.timetable, 5, 0, 2, ' ', 0)
 
-	customBrowse := tview.NewTable().
-		SetSelectable(true, false)
+	w.customBrowse.SetSelectable(true, false)
 
 	// Filter the intake code list with search keyword
 	for _, i := range intakes {
@@ -93,28 +91,28 @@ func Temp(query string) (string, tview.Primitive) {
 		}
 	}
 
-	// Display the custom intake code list
+	// Display the filtered intake code list
 	for row, i := range shortList {
-		tableCell := tview.NewTableCell(i).
-			SetTextColor(tcell.ColorWhite)
+		tableCell := tview.NewTableCell(i)
+		tableCell.SetTextColor(tcell.ColorWhite)
 
-		customBrowse.SetCell(row, 0, tableCell)
+		w.customBrowse.SetCell(row, 0, tableCell)
 	}
 
 	// Display timetable of the selected intake code
-	customBrowse.SetSelectedFunc(func(row, column int) {
-		pages.SwitchToPage("Timetable")
+	w.customBrowse.SetSelectedFunc(func(row, column int) {
+		w.pages.SwitchToPage("Timetable")
 
 		intakeCode = shortList[row]
 
 		count := 0
-		timetable.SetText(shortList[row] + "\n\n")
+		w.timetable.SetText(shortList[row] + "\n\n")
 		tb = rmDupSchedule(tb)
 		for i := range tb {
 			if shortList[row] == tb[i].Intake && weekNo == weekOf(tb[i].DateISO) {
 				count++
 				fmt.Fprintln(
-					w, tb[i].Day+"\t"+
+					writer, tb[i].Day+"\t"+
 						tb[i].Date+"\t"+
 						tb[i].StartTime+"-"+tb[i].EndTime+"\t"+
 						tb[i].Room+"\t"+
@@ -125,13 +123,13 @@ func Temp(query string) (string, tview.Primitive) {
 			}
 		}
 		if count == 0 {
-			fmt.Fprintln(w, "No classes for this week.")
+			fmt.Fprintln(writer, "No classes for this week.")
 		}
-		w.Flush()
+		writer.Flush()
 
 		// Remove this temporary page
-		pages.RemovePage("Temp")
+		w.pages.RemovePage("Temp")
 	})
 
-	return "Temp", customBrowse
+	return "Temp", w.customBrowse
 }
