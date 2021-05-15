@@ -34,6 +34,7 @@ var (
 	configPath   string = configDir + fileDir
 )
 
+// Check existence of config directory
 func checkConfigDir() bool {
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
 		return false
@@ -41,10 +42,12 @@ func checkConfigDir() bool {
 	return true
 }
 
+// Create config directory
 func createConfigDir() {
 	os.Mkdir(configPath, 0755)
 }
 
+// Check existence of config file
 func checkConfig() bool {
 	if _, err := os.Stat(configPath + fileName); os.IsNotExist(err) {
 		return false
@@ -52,6 +55,7 @@ func checkConfig() bool {
 	return true
 }
 
+// Create config file (if not exist) and write into config file
 func writeConfig(data string) {
 	err := os.WriteFile(configPath+fileName, []byte(data), 0644)
 	if err != nil {
@@ -59,6 +63,7 @@ func writeConfig(data string) {
 	}
 }
 
+// Read config file
 func readConfig() string {
 	file, err := os.Open(configPath + fileName)
 	if err != nil {

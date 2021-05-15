@@ -33,11 +33,11 @@ func (w *Widget) LoadInfo() {
 	w.info.SetWrap(false)
 
 	keyInfo := []KeyInfo{
-		KeyInfo{'q', "Quit"},
-		KeyInfo{'t', "Timetable"},
-		KeyInfo{'b', "Browse"},
-		KeyInfo{'/', "Search"},
-		KeyInfo{'s', "Set Default"},
+		{'q', "Quit"},
+		{'t', "Timetable"},
+		{'b', "Browse"},
+		{'/', "Search"},
+		{'s', "Set Default"},
 	}
 
 	for i := range keyInfo {
