@@ -26,6 +26,9 @@ type Window func() (string, tview.Primitive)
 
 // SetPage setup and loads pages
 func (w *Widget) SetPage() {
+	// Pages widget settings
+	w.pages.SetBorder(true)
+
 	windows := []Window{
 		w.LoadTimetable,
 		w.LoadBrowse,
@@ -35,6 +38,4 @@ func (w *Widget) SetPage() {
 		pageName, page := window()
 		w.pages.AddPage(pageName, page, true, i == 0)
 	}
-
-	w.pages.SetBorder(true)
 }

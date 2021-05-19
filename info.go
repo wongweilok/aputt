@@ -29,6 +29,7 @@ type KeyInfo struct {
 
 // LoadInfo displays hint of keys and its action
 func (w *Widget) LoadInfo() {
+	// Info widget settings
 	w.info.SetDynamicColors(true)
 	w.info.SetWrap(false)
 

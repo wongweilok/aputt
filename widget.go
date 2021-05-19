@@ -49,9 +49,8 @@ func (w *Widget) Init() {
 	w.search = tview.NewInputField()
 	w.LoadSearch()
 
-	// Browse & custom browse menu
+	// Browse menu
 	w.browse = tview.NewTable()
-	w.customBrowse = tview.NewTable()
 
 	// Set Pages
 	w.pages = tview.NewPages()

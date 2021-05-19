@@ -87,6 +87,7 @@ func (w *Widget) Temp(query string) (string, tview.Primitive) {
 	writer.Init(w.timetable, 5, 0, 2, ' ', 0)
 
 	// CustomBrowse widget settings
+	w.customBrowse = tview.NewTable()
 	w.customBrowse.SetSelectable(true, false)
 	w.customBrowse.SetBorderPadding(0, 0, 1, 0)
 

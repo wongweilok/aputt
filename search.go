@@ -23,6 +23,7 @@ import "github.com/gdamore/tcell/v2"
 
 // LoadSearch initializes search input field
 func (w *Widget) LoadSearch() {
+	// Search widget settings
 	w.search.SetFieldWidth(0)
 	w.search.SetFieldBackgroundColor(tcell.ColorBlack)
 }

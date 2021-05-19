@@ -31,6 +31,7 @@ func (w *Widget) SetKeybinding() {
 		switch event.Rune() {
 		case 'q':
 			w.app.Stop()
+			return nil
 		case 't':
 			w.pages.SwitchToPage("Timetable")
 			w.removePage("Temp")
@@ -59,6 +60,7 @@ func (w *Widget) SetKeybinding() {
 			w.pages.AddAndSwitchToPage(pageName, page, true)
 			w.app.SetFocus(w.pages)
 			w.search.SetText("")
+			return nil
 		}
 
 		return event
@@ -87,6 +89,7 @@ func (w *Widget) SetKeybinding() {
 
 			return nil
 		}
+
 		return event
 	})
 
