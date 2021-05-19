@@ -35,7 +35,11 @@ var (
 
 // LoadTimetable displays timetable schedule
 func (w *Widget) LoadTimetable() (string, tview.Primitive) {
+	// Initialize tabwriter
 	writer.Init(w.timetable, 5, 0, 2, ' ', 0)
+
+	// Timetable widget settings
+	w.timetable.SetBorderPadding(0, 0, 1, 0)
 
 	// Check if config file exist
 	if !checkConfig() {

@@ -31,11 +31,14 @@ import (
 func (w *Widget) LoadBrowse() (string, tview.Primitive) {
 	intakes := intakeArrayList()
 
+	// Initialize tabwriter
 	writer.Init(w.timetable, 5, 0, 2, ' ', 0)
 
-	// Display list of intake codes with table
+	// Browse widget settings
 	w.browse.SetSelectable(true, false)
+	w.browse.SetBorderPadding(0, 0, 1, 0)
 
+	// Display list of intake codes with table
 	for row, i := range intakes {
 		tableCell := tview.NewTableCell(i)
 		tableCell.SetTextColor(tcell.ColorWhite)
@@ -80,9 +83,12 @@ func (w *Widget) Temp(query string) (string, tview.Primitive) {
 	intakes := intakeArrayList()
 	shortList := []string{}
 
+	// Initialize tabwriter
 	writer.Init(w.timetable, 5, 0, 2, ' ', 0)
 
+	// CustomBrowse widget settings
 	w.customBrowse.SetSelectable(true, false)
+	w.customBrowse.SetBorderPadding(0, 0, 1, 0)
 
 	// Filter the intake code list with search keyword
 	for _, i := range intakes {
