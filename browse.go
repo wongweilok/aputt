@@ -20,7 +20,6 @@
 package main
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/gdamore/tcell/v2"
@@ -30,9 +29,6 @@ import (
 // LoadBrowse loads browse menu with intake codes and init browse menu specific settings
 func (w *Widget) LoadBrowse() (string, tview.Primitive) {
 	intakes := intakeArrayList()
-
-	// Initialize tabwriter
-	writer.Init(w.timetable, 5, 0, 2, ' ', 0)
 
 	// Browse widget settings
 	w.browse.SetSelectable(true, false)
@@ -52,27 +48,8 @@ func (w *Widget) LoadBrowse() (string, tview.Primitive) {
 
 		intakeCode = intakes[row]
 
-		count := 0
-		w.timetable.SetText(intakes[row] + "\n\n")
-		tb = rmDupSchedule(tb)
-		for i := range tb {
-			if intakes[row] == tb[i].Intake && weekNo == weekOf(tb[i].DateISO) {
-				count++
-				fmt.Fprintln(
-					writer, tb[i].Day+"\t"+
-						tb[i].Date+"\t"+
-						tb[i].StartTime+"-"+tb[i].EndTime+"\t"+
-						tb[i].Room+"\t"+
-						tb[i].Module+"\t"+
-						tb[i].LectID+"\t"+
-						tb[i].Group,
-				)
-			}
-		}
-		if count == 0 {
-			fmt.Fprintln(writer, "No classes for this week.")
-		}
-		writer.Flush()
+		// Display timetable schedule
+		w.DisplaySchedule(intakeCode)
 	})
 
 	return "Browse", w.browse
@@ -82,9 +59,6 @@ func (w *Widget) LoadBrowse() (string, tview.Primitive) {
 func (w *Widget) Temp(query string) (string, tview.Primitive) {
 	intakes := intakeArrayList()
 	shortList := []string{}
-
-	// Initialize tabwriter
-	writer.Init(w.timetable, 5, 0, 2, ' ', 0)
 
 	// CustomBrowse widget settings
 	w.customBrowse = tview.NewTable()
@@ -112,27 +86,8 @@ func (w *Widget) Temp(query string) (string, tview.Primitive) {
 
 		intakeCode = shortList[row]
 
-		count := 0
-		w.timetable.SetText(shortList[row] + "\n\n")
-		tb = rmDupSchedule(tb)
-		for i := range tb {
-			if shortList[row] == tb[i].Intake && weekNo == weekOf(tb[i].DateISO) {
-				count++
-				fmt.Fprintln(
-					writer, tb[i].Day+"\t"+
-						tb[i].Date+"\t"+
-						tb[i].StartTime+"-"+tb[i].EndTime+"\t"+
-						tb[i].Room+"\t"+
-						tb[i].Module+"\t"+
-						tb[i].LectID+"\t"+
-						tb[i].Group,
-				)
-			}
-		}
-		if count == 0 {
-			fmt.Fprintln(writer, "No classes for this week.")
-		}
-		writer.Flush()
+		// Display timetable schedule
+		w.DisplaySchedule(intakeCode)
 
 		// Remove this temporary page
 		w.pages.RemovePage("Temp")

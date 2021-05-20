@@ -28,16 +28,14 @@ import (
 )
 
 var (
-	intakeCode string
-	writer     = new(tabwriter.Writer)
-	_, weekNo  = time.Now().ISOWeek() // Get week number of current time
+	dIntakeCode string // Default intake code
+	intakeCode  string // Currently view intake code
+	writer      = new(tabwriter.Writer)
+	_, weekNo   = time.Now().ISOWeek() // Get week number of current time
 )
 
 // LoadTimetable displays timetable schedule
 func (w *Widget) LoadTimetable() (string, tview.Primitive) {
-	// Initialize tabwriter
-	writer.Init(w.timetable, 5, 0, 2, ' ', 0)
-
 	// Timetable widget settings
 	w.timetable.SetBorderPadding(0, 0, 1, 0)
 
@@ -46,31 +44,11 @@ func (w *Widget) LoadTimetable() (string, tview.Primitive) {
 		w.timetable.SetText("Press 'b' to browse and select an intake.")
 	} else {
 		// Get intake code from config file
-		intakeCode = readConfig()
-		myintake := readConfig()
+		dIntakeCode = readConfig()
+		intakeCode = dIntakeCode
 
-		// Display timetable
-		count := 0
-		w.timetable.SetText(myintake + "\n\n")
-		tb = rmDupSchedule(tb)
-		for i := range tb {
-			if myintake == tb[i].Intake && weekNo == weekOf(tb[i].DateISO) {
-				count++
-				fmt.Fprintln(
-					writer, tb[i].Day+"\t"+
-						tb[i].Date+"\t"+
-						tb[i].StartTime+"-"+tb[i].EndTime+"\t"+
-						tb[i].Room+"\t"+
-						tb[i].Module+"\t"+
-						tb[i].LectID+"\t"+
-						tb[i].Group,
-				)
-			}
-		}
-		if count == 0 {
-			fmt.Fprintln(writer, "No classes for this week.")
-		}
-		writer.Flush()
+		// Display timetable schedule
+		w.DisplaySchedule(intakeCode)
 	}
 
 	return "Timetable", w.timetable
@@ -139,4 +117,31 @@ func rmDupSchedule(tb []TimetableData) []TimetableData {
 	}
 
 	return tbUnique
+}
+
+func (w *Widget) DisplaySchedule(intakeCode string) {
+	// Initialize tabwriter
+	writer.Init(w.timetable, 5, 0, 2, ' ', 0)
+
+	count := 0
+	w.timetable.SetText(intakeCode + "\n\n")
+	tb = rmDupSchedule(tb)
+	for i := range tb {
+		if intakeCode == tb[i].Intake && weekNo == weekOf(tb[i].DateISO) {
+			count++
+			fmt.Fprintln(
+				writer, tb[i].Day+"\t"+
+					tb[i].Date+"\t"+
+					tb[i].StartTime+"-"+tb[i].EndTime+"\t"+
+					tb[i].Room+"\t"+
+					tb[i].Module+"\t"+
+					tb[i].LectID+"\t"+
+					tb[i].Group,
+			)
+		}
+	}
+	if count == 0 {
+		fmt.Fprintln(writer, "No classes for this week.")
+	}
+	writer.Flush()
 }
