@@ -48,7 +48,6 @@ func (w *Widget) LoadBrowse() (string, tview.Primitive) {
 
 		intakeCode = intakes[row]
 
-		// Display timetable schedule
 		w.DisplaySchedule(intakeCode)
 	})
 
@@ -86,7 +85,6 @@ func (w *Widget) Temp(query string) (string, tview.Primitive) {
 
 		intakeCode = shortList[row]
 
-		// Display timetable schedule
 		w.DisplaySchedule(intakeCode)
 
 		// Remove this temporary page

@@ -47,7 +47,6 @@ func (w *Widget) LoadTimetable() (string, tview.Primitive) {
 		dIntakeCode = readConfig()
 		intakeCode = dIntakeCode
 
-		// Display timetable schedule
 		w.DisplaySchedule(intakeCode)
 	}
 
@@ -119,6 +118,7 @@ func rmDupSchedule(tb []TimetableData) []TimetableData {
 	return tbUnique
 }
 
+// DisplaySchedule displays schedule of currently selected intake code
 func (w *Widget) DisplaySchedule(intakeCode string) {
 	// Initialize tabwriter
 	writer.Init(w.timetable, 5, 0, 2, ' ', 0)
