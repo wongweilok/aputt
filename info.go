@@ -39,6 +39,7 @@ func (w *Widget) LoadInfo() {
 		{'b', "Browse"},
 		{'/', "Search"},
 		{'s', "Set Default"},
+		{'v', "View Default"},
 	}
 
 	for i := range keyInfo {
