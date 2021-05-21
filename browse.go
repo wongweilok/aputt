@@ -46,9 +46,7 @@ func (w *Widget) LoadBrowse() (string, tview.Primitive) {
 	w.browse.SetSelectedFunc(func(row, column int) {
 		w.pages.SwitchToPage("Timetable")
 
-		intakeCode = intakes[row]
-
-		w.DisplaySchedule(intakeCode)
+		w.DisplaySchedule(intakes[row])
 	})
 
 	return "Browse", w.browse
@@ -83,9 +81,7 @@ func (w *Widget) Temp(query string) (string, tview.Primitive) {
 	w.customBrowse.SetSelectedFunc(func(row, column int) {
 		w.pages.SwitchToPage("Timetable")
 
-		intakeCode = shortList[row]
-
-		w.DisplaySchedule(intakeCode)
+		w.DisplaySchedule(shortList[row])
 
 		// Remove this temporary page
 		w.pages.RemovePage("Temp")

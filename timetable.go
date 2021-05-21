@@ -29,7 +29,7 @@ import (
 
 var (
 	dIntakeCode string // Default intake code
-	intakeCode  string // Currently view intake code
+	cIntakeCode string // Currently view intake code
 	writer      = new(tabwriter.Writer)
 	_, weekNo   = time.Now().ISOWeek() // Get week number of current time
 )
@@ -45,9 +45,8 @@ func (w *Widget) LoadTimetable() (string, tview.Primitive) {
 	} else {
 		// Get intake code from config file
 		dIntakeCode = readConfig()
-		intakeCode = dIntakeCode
 
-		w.DisplaySchedule(intakeCode)
+		w.DisplaySchedule(dIntakeCode)
 	}
 
 	return "Timetable", w.timetable
@@ -122,6 +121,8 @@ func rmDupSchedule(tb []TimetableData) []TimetableData {
 func (w *Widget) DisplaySchedule(intakeCode string) {
 	// Initialize tabwriter
 	writer.Init(w.timetable, 5, 0, 2, ' ', 0)
+
+	cIntakeCode = intakeCode
 
 	count := 0
 	w.timetable.SetText(intakeCode + "\n\n")

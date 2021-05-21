@@ -43,7 +43,12 @@ func (w *Widget) SetKeybinding() {
 		case 'v':
 			w.pages.SwitchToPage("Timetable")
 			w.removePage("Temp")
-			w.DisplaySchedule(dIntakeCode)
+			if checkConfig() {
+				w.DisplaySchedule(dIntakeCode)
+			} else {
+				w.search.SetText("No default intake code found.")
+				go w.clearText()
+			}
 			return nil
 		case '/':
 			w.search.SetText("")
@@ -79,14 +84,9 @@ func (w *Widget) SetKeybinding() {
 			}
 
 			// Set intake code into config file and display message
-			if !checkConfig() {
-				writeConfig(intakeCode)
-				dIntakeCode = intakeCode
-				w.search.SetText("Current intake code has been set as default.")
-				go w.clearText()
-			} else if readConfig() != intakeCode {
-				writeConfig(intakeCode)
-				dIntakeCode = intakeCode
+			if !checkConfig() || readConfig() != cIntakeCode {
+				writeConfig(cIntakeCode)
+				dIntakeCode = cIntakeCode
 				w.search.SetText("Current intake code has been set as default.")
 				go w.clearText()
 			} else {
