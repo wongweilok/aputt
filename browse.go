@@ -38,7 +38,6 @@ func (w *Widget) LoadBrowse() (string, tview.Primitive) {
 	// Display list of intake codes with table
 	for row, i := range intakes {
 		tableCell := tview.NewTableCell(i)
-		tableCell.SetTextColor(tcell.ColorWhite)
 
 		w.browse.SetCell(row, 0, tableCell)
 	}
@@ -65,29 +64,37 @@ func (w *Widget) Temp(query string) (string, tview.Primitive) {
 	w.customBrowse.SetBackgroundColor(tcell.ColorDefault)
 
 	// Filter the intake code list with search keyword
+	count := 0
 	for _, i := range intakes {
 		if strings.Contains(i, query) {
+			count++
 			shortList = append(shortList, i)
 		}
 	}
 
 	// Display the filtered intake code list
-	for row, i := range shortList {
-		tableCell := tview.NewTableCell(i)
-		tableCell.SetTextColor(tcell.ColorWhite)
+	if count > 0 {
+		for row, i := range shortList {
+			tableCell := tview.NewTableCell(i)
 
-		w.customBrowse.SetCell(row, 0, tableCell)
+			w.customBrowse.SetCell(row, 0, tableCell)
+		}
+
+		// Display timetable of the selected intake code
+		w.customBrowse.SetSelectedFunc(func(row, column int) {
+			w.pages.SwitchToPage("Timetable")
+
+			w.DisplaySchedule(shortList[row])
+
+			// Remove this temporary page
+			w.pages.RemovePage("Temp")
+		})
+	} else {
+		tableCell := tview.NewTableCell("No match found.")
+
+		w.customBrowse.SetCell(0, 0, tableCell)
+		w.customBrowse.SetSelectable(false, false)
 	}
-
-	// Display timetable of the selected intake code
-	w.customBrowse.SetSelectedFunc(func(row, column int) {
-		w.pages.SwitchToPage("Timetable")
-
-		w.DisplaySchedule(shortList[row])
-
-		// Remove this temporary page
-		w.pages.RemovePage("Temp")
-	})
 
 	return "Temp", w.customBrowse
 }
