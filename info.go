@@ -19,7 +19,11 @@
 
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/gdamore/tcell/v2"
+)
 
 // KeyInfo stores key information
 type KeyInfo struct {
@@ -32,6 +36,7 @@ func (w *Widget) LoadInfo() {
 	// Info widget settings
 	w.info.SetDynamicColors(true)
 	w.info.SetWrap(false)
+	w.info.SetBackgroundColor(tcell.ColorDefault)
 
 	keyInfo := []KeyInfo{
 		{'q', "Quit"},

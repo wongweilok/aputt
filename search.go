@@ -25,5 +25,5 @@ import "github.com/gdamore/tcell/v2"
 func (w *Widget) LoadSearch() {
 	// Search widget settings
 	w.search.SetFieldWidth(0)
-	w.search.SetFieldBackgroundColor(tcell.ColorBlack)
+	w.search.SetFieldBackgroundColor(tcell.ColorDefault)
 }

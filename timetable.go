@@ -24,6 +24,7 @@ import (
 	"text/tabwriter"
 	"time"
 
+	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
 
@@ -38,6 +39,7 @@ var (
 func (w *Widget) LoadTimetable() (string, tview.Primitive) {
 	// Timetable widget settings
 	w.timetable.SetBorderPadding(0, 0, 1, 0)
+	w.timetable.SetBackgroundColor(tcell.ColorDefault)
 
 	// Check if config file exist
 	if !checkConfig() {

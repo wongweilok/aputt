@@ -33,6 +33,7 @@ func (w *Widget) LoadBrowse() (string, tview.Primitive) {
 	// Browse widget settings
 	w.browse.SetSelectable(true, false)
 	w.browse.SetBorderPadding(0, 0, 1, 0)
+	w.browse.SetBackgroundColor(tcell.ColorDefault)
 
 	// Display list of intake codes with table
 	for row, i := range intakes {
@@ -61,6 +62,7 @@ func (w *Widget) Temp(query string) (string, tview.Primitive) {
 	w.customBrowse = tview.NewTable()
 	w.customBrowse.SetSelectable(true, false)
 	w.customBrowse.SetBorderPadding(0, 0, 1, 0)
+	w.customBrowse.SetBackgroundColor(tcell.ColorDefault)
 
 	// Filter the intake code list with search keyword
 	for _, i := range intakes {

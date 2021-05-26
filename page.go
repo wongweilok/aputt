@@ -19,7 +19,10 @@
 
 package main
 
-import "github.com/rivo/tview"
+import (
+	"github.com/gdamore/tcell/v2"
+	"github.com/rivo/tview"
+)
 
 // Window stores specific widgets information
 type Window func() (string, tview.Primitive)
@@ -28,6 +31,7 @@ type Window func() (string, tview.Primitive)
 func (w *Widget) SetPage() {
 	// Pages widget settings
 	w.pages.SetBorder(true)
+	w.pages.SetBackgroundColor(tcell.ColorDefault)
 
 	windows := []Window{
 		w.LoadTimetable,
