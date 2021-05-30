@@ -19,11 +19,52 @@
 
 package main
 
+import (
+	"flag"
+	"fmt"
+	"os"
+	"text/tabwriter"
+)
+
 // URL of the timetable API
 const URL string = "https://s3-ap-southeast-1.amazonaws.com/open-ws/weektimetable"
 
 func main() {
 	parseJSON(URL)
+
+	// Init tabwriter
+	tw := new(tabwriter.Writer)
+	tw.Init(os.Stdout, 5, 0, 2, ' ', 0)
+
+	// Command line flag
+	intake := flag.String("i", "", "Display schedule of given intake code.")
+	flag.Parse()
+
+	// Display intake schedule as standard output
+	if *intake != "" {
+		count := 0
+		tb = rmDupSchedule(tb)
+		for i := range tb {
+			if *intake == tb[i].Intake && weekNo == weekOf(tb[i].DateISO) {
+				count++
+				fmt.Fprintln(
+					tw, tb[i].Day+"\t"+
+						tb[i].Date+"\t"+
+						tb[i].StartTime+"-"+tb[i].EndTime+"\t"+
+						tb[i].Room+"\t"+
+						tb[i].Module+"\t"+
+						tb[i].LectID+"\t"+
+						tb[i].Group,
+				)
+			}
+		}
+		if count == 0 {
+			fmt.Println("No match found.")
+		}
+
+		tw.Flush()
+		os.Exit(0)
+	}
 
 	// Init and start application
 	widget := &Widget{}
