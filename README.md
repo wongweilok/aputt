@@ -14,8 +14,6 @@ A small terminal application written in GO that display Asia Pacific University 
 $ go get github.com/wongweilok/aputt
 ```
 
----
-
 **\*NOTE**: If your virus scanner (especially Windows Defender) detect virus from this program, it's false positive.
 
 For more information, please refer the [Golang Documentation](https://golang.org/doc/faq#virus).
@@ -24,18 +22,6 @@ For more information, please refer the [Golang Documentation](https://golang.org
 
 1. [tcell](https://github.com/gdamore/tcell) - Licensed under [Apache License 2.0](https://github.com/gdamore/tcell/blob/master/LICENSE)
 2. [tview](https://github.com/rivo/tview) - Licensed under [MIT License](https://github.com/rivo/tview/blob/master/LICENSE.txt)
-
-## TODO List
-
-1. Main features
-   - Color output
-     * Indicate current ongoing class
-     * Indicate incoming class
-
-2. Others
-   - Offline support.
-   - Command-line arguments
-   - Improve codes.
 
 ## License
 
