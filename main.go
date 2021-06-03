@@ -38,6 +38,7 @@ func main() {
 
 	// Command line flag
 	intake := flag.String("i", "", "Display schedule of given intake code.")
+	df := flag.Bool("d", false, "Display default intake schedule.")
 	flag.Parse()
 
 	// Display intake schedule as standard output
@@ -59,11 +60,42 @@ func main() {
 			}
 		}
 		if count == 0 {
-			fmt.Println("No match found.")
+			fmt.Println("No match found. / No classes for this week.")
 		}
 
 		tw.Flush()
 		os.Exit(0)
+	}
+
+	if *df {
+		if !checkConfig() {
+			fmt.Println("No default intake code was set.")
+		} else {
+			intakeCode := readConfig()
+
+			count := 0
+			tb = rmDupSchedule(tb)
+			for i := range tb {
+				if intakeCode == tb[i].Intake && weekNo == weekOf(tb[i].DateISO) {
+					count++
+					fmt.Fprintln(
+						tw, tb[i].Day+"\t"+
+							tb[i].Date+"\t"+
+							tb[i].StartTime+"-"+tb[i].EndTime+"\t"+
+							tb[i].Room+"\t"+
+							tb[i].Module+"\t"+
+							tb[i].LectID+"\t"+
+							tb[i].Group,
+					)
+				}
+			}
+			if count == 0 {
+				fmt.Println("No classes for this week.")
+			}
+
+			tw.Flush()
+			os.Exit(0)
+		}
 	}
 
 	// Init and start application
